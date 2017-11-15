@@ -1,0 +1,6 @@
+biopython
+numpy
+pandas
+matplotlib
+scipy
+sklearn
