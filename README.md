@@ -56,11 +56,9 @@ ranseps -h
 
 # Contact
 
-[Miravet-Verde, Samuel](samuel.miravet@crg.eu)
-
-[Lluch-Senar, Maria](maria.lluch@crg.eu)
-
-[Serrano, Luis](luis.serrano@crg.eu)
+[Miravet-Verde, Samuel](samuel.miravet@crg.eu)    
+[Lluch-Senar, Maria](maria.lluch@crg.eu)    
+[Serrano, Luis](luis.serrano@crg.eu)    
 
 # License
 
