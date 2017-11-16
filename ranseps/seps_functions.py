@@ -932,12 +932,11 @@ def RanSEPs(genome          , organism         , nt_seqs        , aa_seqs       
                 negative_set += neg_add_prots[:set_sizes[3]]
 
         # Run the classification
-        clf, clf_results_df, fpr_tpr, recall_precision = miniRanSeps(genome        , organism        , nt_seqs          , aa_seqs               , annotation,
-                                                                     positive_set  , feature_set     , negative_set     , to_exclude            ,
-                                                                     sfolds        , test_size       , random_state_test, n_estimators          ,
-                                                                     oob_score     , n_jobs          , random_state     , max_depth             ,
-                                                                     max_features  , min_samples_leaf, propy_feats      , extension+'_'+str(i+1),
-                                                                     project_folder)
+        clf, clf_results_df, fpr_tpr, recall_precision = miniRanSeps(genome        , organism        , nt_seqs               , aa_seqs      , annotation,
+                                                                     positive_set  , feature_set     , negative_set          , to_exclude   ,
+                                                                     sfolds        , test_size       , random_state_test     , n_estimators ,
+                                                                     oob_score     , n_jobs          , random_state          , max_depth    ,
+                                                                     max_features  , min_samples_leaf, extension+'_'+str(i+1),project_folder)
         # Plot if required
         if test_size:
             mean_tpr += interp(mean_fpr, fpr_tpr[0], fpr_tpr[1])    # Updated each iteration
