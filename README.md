@@ -1,4 +1,6 @@
-# RanSEPs
+
+<center><img src="./figures/ranseps.png"></center>
+
 RanSEPs provides a framework for genome re-annotation and novel small proteins detection adjusting the search to different genomic features that govern protein-coding capabilities.
 
 Original publication of RanSEPs can be found [here](XXXXX).

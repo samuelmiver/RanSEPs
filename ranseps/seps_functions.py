@@ -2497,7 +2497,7 @@ def return_orthologs(species_codeA, species_codeB):
 
     return orth_dict
 
-def find_closest_homologs():
+def ddfind_closest_homologs():
     """
     Compare all pairs of species to return a dictionary 
     """
