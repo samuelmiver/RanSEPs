@@ -183,16 +183,6 @@ def load_genome(genome):
     handle.close()
 
 
-def load_genome_DB(organism):
-    """Uses load_genome function to return the sequence of the organism selected"""
-    if os.path.exists('/home/smiravet/crg/dbs/smprots_DB/genomes/'+organism+'.fasta'):
-        genome = load_genome('/home/smiravet/crg/dbs/smprots_DB/genomes/'+organism+'.fasta')
-    else:
-        genome = load_genome('/home/smiravet/crg/dbs/smprots_DB/genomes/'+organism+'.gb')
-
-    return genome
-
-
 def load_annotation(inFile):
     annotation = {}
     with open(inFile) as fi:

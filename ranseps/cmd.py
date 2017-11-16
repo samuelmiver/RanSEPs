@@ -78,6 +78,7 @@ parser.add_argument('-bthreads', '--blast_threads',
                     type=int,
                     help="Number of threads to run BlastP")
 
+# To run blast:
 
 
 options = parser.parse_args()
