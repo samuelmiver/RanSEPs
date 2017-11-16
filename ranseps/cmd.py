@@ -13,8 +13,9 @@ def run_all():
     if options.outDir[-1]!='/':
         options.outDir+='/'
 
-    run_ranseps(options.genome, options.cds, options.outDir,
-                options.codon_table, options.min_size, options.species_code)
+    run_ranseps(options.genome      , options.cds      , options.outDir      ,
+                options.codon_table , options.min_size , options.species_code,
+                options.eval_thr    , options.threads)
 
 
 #PARSER
@@ -61,6 +62,23 @@ parser.add_argument('-sp', '--species_code',
                     default=None,
                     type=str,
                     help="Identifier code used to name the putative proteins. By default RanSEPs uses the 5 first character of the genome name. Ex: mpneumoniae.fa > mpneu")
+
+# To run blast:
+parser.add_argument('-beval', '--blast_evalue_threshold',
+                    dest="eval_thr",
+                    action="store",
+                    default=1e-8,
+                    type=float,
+                    help="e-value threshold stablished to consider a hit as conserved in BlastP")
+
+parser.add_argument('-bthreads', '--blast_threads',
+                    dest="threads",
+                    action="store",
+                    default=12,
+                    type=int,
+                    help="Number of threads to run BlastP")
+
+
 
 options = parser.parse_args()
 

@@ -7,18 +7,27 @@ import utils as u
 from Bio.Seq import Seq
 
 
+def extract_functions(anno_dict):
+
+    dic = {}
+    for info, seq in anno_dict.iteritems():
+        try:
+            info       = info.split('[')[1:]
+            gene, prot = ''.join(info).split(']')[0:2]
+            gene       = gene.replace('gene=','')
+            protein    = prot.replace('protein=','')
+            dic[gene+' |'+protein] = seq
+        except:
+            gene = info.split(' ')[0].replace('>', '')
+            dic[gene+' |'+gene] = seq
+    return dic
+
+
 def pair_id(pred, anno, outfile):
 
     # Depurate the annotated dictionary to have
     # {'gene | protein':seq}
-    dic = {}
-    for info, seq in anno.iteritems():
-        info       = info.split('[')[1:]
-        gene, prot = ''.join(info).split(']')[0:2]
-        gene       = gene.replace('gene=','')
-        protein    = prot.replace('protein=','')
-        dic[gene+' |'+protein] = seq
-    anno = dic
+    anno = extract_functions(anno)
 
     # Find matches
     merged = pred

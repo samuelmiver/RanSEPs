@@ -13,8 +13,9 @@ config = {
     'version': '0.0.1',
     'license': "GNU GPL",
     'install_requires': ['biopython','numpy','pandas','matplotlib',
-                         'scipy','sklearn'],
+                         'scipy','sklearn', 'setuptools'],
     'packages': ['ranseps'],
+    'package_data':{'ranseps': ['dbs/*.fa']},
     'scripts': ['bin/ranseps']
 }
 

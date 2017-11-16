@@ -15,8 +15,9 @@ import utils as u
 
 from orfinder import run_orfinder
 from generate_dbs import run_gdbs
+from blaster import run_blaster
 
-def run_ranseps(genome, cds, outDir, codon_table, min_size, species_code):
+def run_ranseps(genome, cds, outDir, codon_table, min_size, species_code, eval_thr, threads):
 
     # Create a folder for intermediary files
     intDir = outDir+'intermediary_files/'
@@ -35,6 +36,9 @@ def run_ranseps(genome, cds, outDir, codon_table, min_size, species_code):
     run_gdbs(genome=genome, cds=cds, outdir=intDir, min_size=min_size, species_code=species_code, genome_length=gl)
 
     # Run Blast
+    run_blaster(outdir=intDir, min_size=min_size, species_code=species_code, threshold=eval_thr, threads=threads)
+
+
 
 
     # Run RanSEPs
