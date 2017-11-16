@@ -1,5 +1,4 @@
-
-<center><img src="./figures/logo_ranseps.png"></center>
+<div style="text-align:center"><img src ="./figures/logo_ranseps.png" /></div>
 
 RanSEPs provides a framework for bacterial genome re-annotation and novel small proteins detection adjusting the search to different genomic features that govern protein-coding capabilities.
 

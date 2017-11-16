@@ -69,5 +69,5 @@ def run_blaster(outdir, min_size, species_code, threshold, threads):
             if target in NCBI_ides and evalue<=2e-8 and ident>=75.0:
                 cons.append(query[:5])
 
-    print set(cons), '\n------\n'
+    print 'close organisms codes:', set(cons), '\n------\n'
     return list(set(cons))

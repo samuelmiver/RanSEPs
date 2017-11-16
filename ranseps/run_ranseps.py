@@ -73,7 +73,7 @@ def run_ranseps(genome, cds, outDir, codon_table, min_size, species_code, eval_t
                folds=50             , sfolds=0             , test_size=0.2       , random_state_test=None    ,
                n_estimators=100     , oob_score=1          , n_jobs=-1           , random_state=None         ,
                max_depth=None       , max_features="auto"  , min_samples_leaf=5  ,
-               extension='it1_s'    , project_folder=intDir)
+               extension='it1_s'    , project_folder=intDir+'/lresults/')
 
     # Clean intermediary files
 
