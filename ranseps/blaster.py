@@ -21,6 +21,13 @@ import utils as u
 
 import pkg_resources
 
+def build_all_fa(outdir):
+
+    resource_package = __name__  # Could be any module/package name
+    resource_path = '/'.join(('dbs', '*.fa'))
+    template = pkg_resources.resource_filename(resource_package, resource_path)
+    cmd = 'cat '+template+' > '+outdir+'all.fa'
+    os.system(cmd)
 
 
 def run_blaster(outdir, min_size, species_code, threshold, threads):
@@ -30,14 +37,11 @@ def run_blaster(outdir, min_size, species_code, threshold, threads):
 
     dir_handle   = outdir+species_code
     your_aa_seqs = outdir+species_code+'_small_aa.fa'
-
-    resource_package = __name__  # Could be any module/package name
-    resource_path = '/'.join(('dbs', 'all.fa'))
-    template = pkg_resources.resource_filename(resource_package, resource_path)
+    build_all_fa(outdir) # Build DB
 
     # Reformat the db file to ensure each sequence is just a line satisfying the size
     fo = open(outdir+'db_filtered.fa', 'w')
-    for ide, seq in u.load_multifasta(template).iteritems():
+    for ide, seq in u.load_multifasta(outdir+'all.fa').iteritems():
         if min_size <= len(seq):
             fo.write('>'+ide+'\n'+seq+'\n')
     fo.close()
@@ -50,3 +54,18 @@ def run_blaster(outdir, min_size, species_code, threshold, threads):
     print('running blast...')
     cmd = 'blastp -db '+outdir+'db_filtered.fa -query '+your_aa_seqs+' -out '+dir_handle+'_results_processed.out -outfmt 6 -evalue '+str(threshold)+' -num_threads '+str(threads)
     os.system(cmd)
+
+    # Define close organism
+    NCBI_ides = u.list_generator(dir_handle+'_pairs.txt', 0)
+    cons = []
+    with open(dir_handle+'_results_processed.out') as fi:
+        for line in fi:
+            line   = line.strip().split()
+            target = line[0]
+            query  = line[1]
+            ident  = float(line[2])
+            evalue = float(line[-2])
+
+            if target in NCBI_ides and evalue<=2e-8 and ident>=65.0:
+                cons.append(query[:5])
+   return list(set(cons))
