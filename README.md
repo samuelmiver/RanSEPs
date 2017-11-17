@@ -5,7 +5,7 @@
 </p>
 
 
-RanSEPs provides a framework for bacterial genome re-annotation and novel small proteins detection adjusting the search to different genomic features that govern protein-coding capabilities.
+RanSEPs provides a framework for bacterial genome re-annotation and novel small proteins (SEPs) detection adjusting the search to different genomic features that govern protein-coding capabilities.
 
 # How does RanSEPs work?
 
@@ -54,6 +54,16 @@ This will run a simple search for proteins with size higher than 10 amino acids.
 ```bash
 ranseps -h
 ```
+
+# Output
+
+Once the program has run without problems (we really hope it!), you will find in your selected directory:
+   - A tab delimited file with all the sequences, their location, RanSEPs score and standard deviation and nt and aa sequences. We recommend a threshold of >= 0.5 to trust a SEP and >=0.85 for standard proteins.
+   - Precission-recall and ROC curves to assess the accuracy of your prediction.
+   - The weights and errors for each feature considered.
+
+If this output is not enough, RanSEPs will generate a *intermediary_folder* including all databases, annotation files, amino acidic and nucleotidic sequences in fasta files and classifiers, features and statistics for each classification subprocess (more information in online methods of the original publication). You can remove this folder safely if you have enough with the default results.
+
 
 # RanSEPs as a python package
 

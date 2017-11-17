@@ -1,5 +1,15 @@
 #!/usr/bin/env python
 
+#############################################################
+#
+# cmd.py
+#
+# Author : Miravet-Verde, Samuel
+# Last updated : 11/17/2017
+#
+# Command line parser to run RanSEPs.
+#############################################################
+
 import sys
 import os
 import argparse
@@ -13,13 +23,15 @@ def run_all():
     if options.outDir[-1]!='/':
         options.outDir+='/'
 
-    run_ranseps(options.genome      , options.cds      , options.outDir    ,options.codon_table , options.min_size , options.species_code,
-                options.eval_thr    , options.threads  ,
-                options.eval_thr2   , options.align_thr, options.length_thr, options.iden_thr   )
+    run_ranseps(options.genome         , options.cds              , options.outDir          ,options.codon_table       , options.min_size , options.species_code,
+                options.eval_thr       , options.threads          ,
+                options.eval_thr2      , options.align_thr        , options.length_thr      , options.iden_thr         ,
+                options.seps_percentage, options.positive_set_size, options.feature_set_size, options.negative_set_size,
+                options.test_size      , options.folds)
 
 
 #PARSER
-parser = argparse.ArgumentParser(description = "RanSEPs provides a framework for genome re-annotation and novel small proteins detection adjusting the search to different genomic features that govern protein-coding capabilities.")
+parser = argparse.ArgumentParser(description = "RanSEPs provides a framework for bacterial genome re-annotation and novel small proteins (SEPs) detection adjusting the search to different genomic features that govern protein-coding capabilities.")
 
 parser.add_argument('-g', '--genome',
                     dest="genome",
@@ -45,7 +57,7 @@ parser.add_argument('-o', '--output_directory',
 parser.add_argument('-t', '--codon_table',
                     dest="codon_table",
                     action="store",
-                    default=11,
+                    default=0,
                     type=int,
                     help="Codon translation table. Accepted tables = [0, 4, 11]. 0 will use as START and STOP codons the ones observed for genes in --CDS")
 
@@ -106,6 +118,50 @@ parser.add_argument('-cident', '--negative_identity_threshold',
                     default=50.0,
                     type=float,
                     help="Identity threshold stablished to consider a hit as conserved for the negative set definition")
+
+# RanSEPs arguments
+
+parser.add_argument('-rp', '--seps_percentage',
+                    dest="seps_percentage",
+                    action="store",
+                    default=0.25,
+                    type=float,
+                    help="Percentage of SEPs included in the positive and feature training sets")
+
+parser.add_argument('-pn', '--positive_set_size',
+                    dest="positive_set_size",
+                    action="store",
+                    default=100,
+                    type=int,
+                    help="Training positive set size for each iteration")
+
+parser.add_argument('-fn', '--feature_set_size',
+                    dest="feature_set_size",
+                    action="store",
+                    default=100,
+                    type=int,
+                    help="Feature set size for each iteration")
+
+parser.add_argument('-nn', '--negative_set_size',
+                    dest="negative_set_size",
+                    action="store",
+                    default=150,
+                    type=int,
+                    help="Training negative set size for each iteration")
+
+parser.add_argument('-tn', '--test_size',
+                    dest="test_size",
+                    action="store",
+                    default=0.2,
+                    type=float,
+                    help="Percentage of sequences from the training sets used in testing")
+
+parser.add_argument('-f', '--folds',
+                    dest="folds",
+                    action="store",
+                    default=50,
+                    type=int,
+                    help="Training positive set size for each iteration")
 
 options = parser.parse_args()
 

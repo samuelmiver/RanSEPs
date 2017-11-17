@@ -6,7 +6,7 @@
 #
 # Author : Miravet-Verde, Samuel
 # Written : 03/06/2017
-# Last updated : 11/15/2017
+# Last updated : 11/17/2017
 #
 #############################################################
 
@@ -1007,4 +1007,45 @@ def RanSEPs(genome          , organism         , nt_seqs        , aa_seqs       
 
     # Process results (mean of prob1!)
     process_clf_results(project_folder, organism)
-    print "Thanks for using RanSEPs :D!\n||Stand and be True||"
+
+##########################
+#HANDLING OUTPUT FUNCTION#
+##########################
+
+def handle_outputs(species_code, outDir):
+
+    # Move figures:
+    c = 'cp '+outDir+'intermediary_files/rs_results/results/*.svg '+outDir
+    os.system(c)
+
+    # Generate the last file
+    header = ['identifier', 'start'   , 'stop', 'strand', 'aa_length',
+              'annotation', 'function', 'RanSEPs_score' , 'RanSEPs_stdv',
+              'nt_seq'    , 'aa_seq']
+
+    intDir = outDir+'intermediary_files/'+species_code
+
+    with open(outDir+species_code+'_predicted.csv', 'w') as fo:
+        fo.write('\t'.join(header)+'\n')
+        dbaaseqs = u.load_multifasta(intDir+'_small_aa.fa')
+        dbntseqs = u.load_multifasta(intDir+'_small_nt.fa')
+        dbannots = u.load_annotation(intDir+'_annotation.txt')
+        dbpaires = u.str_dic_generator(intDir+'_pairs.txt', 0, 1)
+        dbfuncts = u.str_dic_generator(intDir+'_pairs.txt', 0, 2, split_by='\t')
+        dbscores = u.str_dic_generator(outDir+'intermediary_files/rs_results/results/'+species_code+'_final_prediction.txt', 0, 1)
+        dbstdevs = u.str_dic_generator(outDir+'intermediary_files/rs_results/results/'+species_code+'_final_prediction.txt', 0, 2)
+
+        ides = sorted(dbaaseqs.keys())
+        for ide in ides:
+            if ide in dbpaires:
+                p = dbpaires[ide].replace(';', ',')
+                f = dbfuncts[ide].replace(';', ',')
+            else:
+                p = 'Putative ORF'
+                f = 'Unassigned function'
+            if ide not in dbscores:
+                dbscores[ide] = 'Not a valid sequence'
+                dbstdevs[ide] = 'Not a valid sequence'
+            to_write = [ide]+[str(x) for x in dbannots[ide]]+[str(len(dbaaseqs[ide])), p, f, str(dbscores[ide]), str(dbstdevs[ide]), dbntseqs[ide], dbaaseqs[ide]]
+            fo.write('\t'.join(to_write)+'\n')
+        fo.close()
