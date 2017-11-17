@@ -103,7 +103,7 @@ def annotation_file(g_size, predd, dir_handle, min_size):
     fo2.close()
 
 
-def run_gdbs(genome, cds, outdir, min_size, species_code, genome_length):
+def run_gdbs(cds, outdir, min_size, species_code, genome_length):
 
     dir_handle = outdir+species_code
     annotated = u.load_multifasta_info(cds)

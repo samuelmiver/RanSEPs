@@ -13,9 +13,9 @@ def run_all():
     if options.outDir[-1]!='/':
         options.outDir+='/'
 
-    run_ranseps(options.genome      , options.cds      , options.outDir      ,
-                options.codon_table , options.min_size , options.species_code,
-                options.eval_thr    , options.threads)
+    run_ranseps(options.genome      , options.cds      , options.outDir    ,options.codon_table , options.min_size , options.species_code,
+                options.eval_thr    , options.threads  ,
+                options.eval_thr2   , options.align_thr, options.length_thr, options.iden_thr   )
 
 
 #PARSER
@@ -78,8 +78,34 @@ parser.add_argument('-bthreads', '--blast_threads',
                     type=int,
                     help="Number of threads to run BlastP")
 
-# To run blast:
+# To run conservation analysis and define the negative set:
+parser.add_argument('-ceval', '--negative_evalue_threshold',
+                    dest="eval_thr2",
+                    action="store",
+                    default=2e-8,
+                    type=float,
+                    help="e-value threshold stablished to consider a hit as conserved for the negative set definition")
 
+parser.add_argument('-calign', '--negative_alignment_threshold',
+                    dest="align_thr",
+                    action="store",
+                    default=0.0,
+                    type=float,
+                    help="Alignment threshold stablished to consider a hit as conserved for the negative set definition")
+
+parser.add_argument('-clength', '--negative_length_threshold',
+                    dest="length_thr",
+                    action="store",
+                    default=0.0,
+                    type=float,
+                    help="Length threshold stablished to consider a hit as conserved for the negative set definition")
+
+parser.add_argument('-cident', '--negative_identity_threshold',
+                    dest="iden_thr",
+                    action="store",
+                    default=50.0,
+                    type=float,
+                    help="Identity threshold stablished to consider a hit as conserved for the negative set definition")
 
 options = parser.parse_args()
 

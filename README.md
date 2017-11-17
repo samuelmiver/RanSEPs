@@ -4,6 +4,7 @@
   <img src="./figures/logo_ranseps.png"/>
 </p>
 
+
 RanSEPs provides a framework for bacterial genome re-annotation and novel small proteins detection adjusting the search to different genomic features that govern protein-coding capabilities.
 
 # How does RanSEPs work?
@@ -56,8 +57,29 @@ ranseps -h
 
 # RanSEPs as a python package
 
+You can import RanSEPs to use it as an implemented function in any of your python scripts. To do so, just follow the previous installation steps and import the main function using:
+
+```python
+from ranseps.run_ranseps import run_ranseps
+```
+
+Then you will be able to run the tool in any script using:
+
+```python
+run_ranseps(<path/to/your/genome> , <path/to/your/cds/file>)
+```
+
+All the additional arguments present in the desktop version are available in the python function, to check the documentation interactively in python interpreter you can use:
+
+```python
+help(run_ranseps)
+```
 
 # Contact
+
+This project has been fully developed at [Centre for Genomic Regulation](http://www.crg.eu/) at the group of [Design of Biological Systems](http://www.crg.eu/en/luis_serrano).
+
+If you experience any problem at any step involving the program, you can use the 'Issues' page of this repository or contact:
 
 [Miravet-Verde, Samuel](samuel.miravet@crg.eu)    
 [Lluch-Senar, Maria](maria.lluch@crg.eu)    

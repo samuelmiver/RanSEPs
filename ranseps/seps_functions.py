@@ -410,7 +410,7 @@ def run_m10p20(genome, training_ides, testing_ides, annotation):
 
 
 def compute_m10p20_dict(genome, nt_seqs, feature_set, annotation):
-    orfs_m10p20_sc = run_m10p20(organism, feature_set, nt_seqs.keys(), annotation)
+    orfs_m10p20_sc = run_m10p20(genome, feature_set, nt_seqs.keys(), annotation)
     minus10 = {k:float(v[0]) for k, v in orfs_m10p20_sc.iteritems()}
     plus20  = {k:float(v[1]) for k, v in orfs_m10p20_sc.iteritems()}
     return minus10, plus20
@@ -447,8 +447,8 @@ def generate_DB_stack_energy(genome, annotation):
     annotation of the organism is not used
     """
     # Load genome and annotation if required
-    lg     = len(genome)
-    genomec += genome+genome # circular
+    lg      = len(genome)
+    genomec = genome+genome # circular
 
     stack_energies_dic = {}
     for k, v in annotation.iteritems():
@@ -564,9 +564,11 @@ def startcodon(seq, codons=10):
 
 def create_directory_structure(project_folder):
     """ Given a project directory creates a subtree directory """
-    os.mkdir(project_folder)
-    for subfolder in ['classification_stats', 'classification_tasks', 'classifiers', 'feature_importances', 'features', 'results']:
-        os.mkdir(project_folder+'/'+subfolder)
+    if not os.path.exists(project_folder):
+        os.mkdir(project_folder)
+        for subfolder in ['classification_stats', 'classification_tasks', 'classifiers', 'feature_importances', 'features', 'results']:
+            if not os.path.exists(project_folder+'/'+subfolder):
+                os.mkdir(project_folder+'/'+subfolder)
 
 
 def short3propy(aa_seqs):
@@ -585,7 +587,7 @@ def short3propy(aa_seqs):
     return propy_df
 
 
-def featurizer2(genome, organism, nt_seqs, aa_seqs, annotation, positive_set, feature_set, negative_set, extension, project_folder=None):
+def featurizer2(genome, organism, nt_seqs, aa_seqs, annotation, positive_set, feature_set, negative_set, extension, project_folder):
     """
     This function requires the user to provide two dictionaries of nt and aa seqs with ides and a list of
     ids that will be used to generate the positive, negative and feature set.
@@ -595,7 +597,7 @@ def featurizer2(genome, organism, nt_seqs, aa_seqs, annotation, positive_set, fe
     """
 
     # Generate a fasta file with the sequences in the feature set
-    with open(project_folder+'feat_'+organism+'_'+extension+'_sequences.fa', 'w') as fo:
+    with open(project_folder+'features/feat_'+organism+'_'+extension+'_sequences.fa', 'w') as fo:
         for ide in feature_set:
             fo.write('>'+ide+'\n'+str(nt_seqs[ide])+'\n')
 
@@ -620,7 +622,7 @@ def featurizer2(genome, organism, nt_seqs, aa_seqs, annotation, positive_set, fe
 
     # CAI:
     cai = CodonAdaptationIndex()
-    cai.generate_index(project_folder+'feat_'+organism+'_'+extension+'_sequences.fa')
+    cai.generate_index(project_folder+'features/feat_'+organism+'_'+extension+'_sequences.fa')
 
     # 2 aa N and C terminal
     nt_diaa_freq, ct_diaa_freq = NCterminal([aa_seqs[ide] for ide in feature_set])
@@ -640,7 +642,7 @@ def featurizer2(genome, organism, nt_seqs, aa_seqs, annotation, positive_set, fe
     background_model  = {cd:reduce(lambda x, y: x*y, [proportions[x] for x in cd]) for cd in background_model}
     assert 0.98 < sum(background_model.values()) <1.01
 
-    hex_freq_dict = hexamer_freqs([str(x) for x in u.load_multifasta(project_folder+'feat_'+organism+'_'+extension+'_sequences.fa').values()], background_model)
+    hex_freq_dict = hexamer_freqs([str(x) for x in u.load_multifasta(project_folder+'features/feat_'+organism+'_'+extension+'_sequences.fa').values()], background_model)
 
     hex0, hex1, hex2, hex3 = {}, {}, {},{}
     for ide, seq in nt_seqs.iteritems():
@@ -696,7 +698,7 @@ def featurizer2(genome, organism, nt_seqs, aa_seqs, annotation, positive_set, fe
     feats_df = feats_df.dropna()
 
     # Store the pickle object
-    feats_df.to_pickle(project_folder+'feat_'+organism+'_'+extension+'.pickle')
+    feats_df.to_pickle(project_folder+'features/feat_'+organism+'_'+extension+'.pickle')
 
     return feats_df
 

@@ -17,7 +17,7 @@ from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 from Bio.Alphabet import generic_dna, generic_protein
 
-def run_orfinder(genome_handle, cds, outdir, ct, min_size, species_code):
+def run_orfinder(genome, cds, outdir, ct, min_size, species_code):
     """
     Given a genome in fasta or genbank format
     Generates the nt and aa databases with proteins larger than min size
@@ -27,9 +27,8 @@ def run_orfinder(genome_handle, cds, outdir, ct, min_size, species_code):
     mode 11 =  use codon table 11
     """
 
-
-    genome = Seq(str(u.load_multifasta(genome_handle)))
-    print 'running the analysis on:\n'+genome_handle+'\n------\nidentifier: '+species_code+'\n------\n'
+    genome = Seq(genome)
+    print 'running the analysis on:'+species_code+'\n------\n'
 
     # Define the start and stop codons based on what we see in the annotation
     if ct==0:
@@ -53,7 +52,6 @@ def run_orfinder(genome_handle, cds, outdir, ct, min_size, species_code):
 
     print 'start codons:\n'+'\t'.join(start_codons)+'\n------\n'
     print 'stop  codons:\n'+'\t'.join(stop_codons)+'\n------\n'
-
 
     # Transform them into a regexp
     regexpstarts = '(?='+'|'.join(start_codons)+')'
@@ -105,10 +103,8 @@ def run_orfinder(genome_handle, cds, outdir, ct, min_size, species_code):
     total_stops  = 0.0
     total_starts = 0.0
 
-
     # Define the genomes
     list_of_genomes = [('+', genome), ('-', genome.reverse_complement())]
-
 
     # Run the prediction
     for strand, sequence in list_of_genomes:
@@ -125,16 +121,12 @@ def run_orfinder(genome_handle, cds, outdir, ct, min_size, species_code):
 
     print 'number of SEPs found:'+str(len(results))+'\n------\n'
 
-
     # Write in fasta files
-    if outdir:
-        font = open(outdir+species_code+'_small_nt.fa', 'w')
+    font = open(outdir+species_code+'_small_nt.fa', 'w')
 
-    # Numeric identifiers
     maxi = len(str(len(results)+1))
     identifiers = [species_code+str(i+1).zfill(maxi) for i in range(0, len(results))]
 
-    # Write multifastas
     records_nt = []
     for i in range(0, len(results)):
         st, en, nt_seq, strand = results[i]
