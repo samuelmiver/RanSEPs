@@ -7,6 +7,7 @@
 # Author : Miravet-Verde, Samuel
 # Last updated : 11/15/2017
 #
+# [2017] - Centre de Regulació Genòmica (CRG) - All Rights Reserved
 #############################################################
 
 import os.path
@@ -254,3 +255,5 @@ def reverse_complement(seq):
     complement = {'A': 'T', 'C': 'G', 'G': 'C', 'T': 'A'}
 
     return ''.join([complement[k] if k in complement else 'N' for k in seq][::-1])
+
+# [2017] - Centre de Regulació Genòmica (CRG) - All Rights Reserved

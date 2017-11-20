@@ -8,6 +8,7 @@
 # Written : 03/06/2017
 # Last updated : 11/17/2017
 #
+# [2017] - Centre de Regulació Genòmica (CRG) - All Rights Reserved
 #############################################################
 
 #####################
@@ -1049,3 +1050,5 @@ def handle_outputs(species_code, outDir):
             to_write = [ide]+[str(x) for x in dbannots[ide]]+[str(len(dbaaseqs[ide])), p, f, str(dbscores[ide]), str(dbstdevs[ide]), dbntseqs[ide], dbaaseqs[ide]]
             fo.write('\t'.join(to_write)+'\n')
         fo.close()
+
+# [2017] - Centre de Regulació Genòmica (CRG) - All Rights Reserved
