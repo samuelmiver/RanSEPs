@@ -7,7 +7,7 @@
 # Author : Miravet-Verde, Samuel
 # Written : 03/06/2017
 # Last updated : 11/16/2017
-# [2017] - Centre de Regulació Genòmica (CRG) - All Rights Reserved
+# 2017 - Centre de Regulacio Genomica (CRG) - All Rights Reserved
 #############################################################
 
 #####################
@@ -72,4 +72,4 @@ def run_blaster(outdir, min_size, species_code, threshold, threads):
     print 'close organisms codes:', set(cons), '\n------\n'
     return list(set(cons))
 
-# [2017] - Centre de Regulació Genòmica (CRG) - All Rights Reserved
+# 2017 - Centre de Regulacio Genomica (CRG) - All Rights Reserved

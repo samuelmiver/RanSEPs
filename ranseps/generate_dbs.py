@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# [2017] - Centre de Regulació Genòmica (CRG) - All Rights Reserved
+# 2017 - Centre de Regulacio Genomica (CRG) - All Rights Reserved
 
 import glob
 import sys, os
@@ -135,4 +135,4 @@ def run_gdbs(cds, outdir, min_size, species_code, genome_length):
     print 'generating annotation\n----\n'
     annotation_file(genome_length, predicted_info, dir_handle, min_size)
 
-# [2017] - Centre de Regulació Genòmica (CRG) - All Rights Reserved
+# 2017 - Centre de Regulacio Genomica (CRG) - All Rights Reserved

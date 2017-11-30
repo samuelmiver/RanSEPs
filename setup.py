@@ -1,4 +1,4 @@
-# [2017] - Centre de Regulació Genòmica (CRG) - All Rights Reserved
+# 2017 - Centre de Regulacio Genomica (CRG) - All Rights Reserved
 
 try:
     from setuptools import setup
@@ -23,4 +23,4 @@ config = {
 
 setup(**config)
 
-# [2017] - Centre de Regulació Genòmica (CRG) - All Rights Reserved
+# 2017 - Centre de Regulacio Genomica (CRG) - All Rights Reserved

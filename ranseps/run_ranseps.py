@@ -7,7 +7,7 @@
 # Author : Miravet-Verde, Samuel
 # Last updated : 11/15/2017
 #
-# [2017] - Centre de Regulació Genòmica (CRG) - All Rights Reserved
+# 2017 - Centre de Regulacio Genomica (CRG) - All Rights Reserved
 #############################################################
 
 import sys, os
@@ -117,4 +117,4 @@ def run_ranseps(genome              , cds                  , outDir='./'        
     print "Thanks for using RanSEPs :D!\n||Stand and be True||"
     # All things serve the Beam.
 
-# [2017] - Centre de Regulació Genòmica (CRG) - All Rights Reserved
+# 2017 - Centre de Regulacio Genomica (CRG) - All Rights Reserved

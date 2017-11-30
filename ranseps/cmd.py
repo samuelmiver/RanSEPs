@@ -8,7 +8,7 @@
 # Last updated : 11/17/2017
 #
 # Command line parser to run RanSEPs.
-# [2017] - Centre de Regulació Genòmica (CRG) - All Rights Reserved
+# 2017 - Centre de Regulacio Genomica (CRG) - All Rights Reserved
 #############################################################
 
 import sys
@@ -169,5 +169,5 @@ options = parser.parse_args()
 if __name__=="__main__":
     run_all()
 
-# [2017] - Centre de Regulació Genòmica (CRG) - All Rights Reserved
+# 2017 - Centre de Regulacio Genomica (CRG) - All Rights Reserved
 
