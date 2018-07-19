@@ -864,6 +864,7 @@ def RanSEPs(genome          , organism         , nt_seqs        , aa_seqs       
         project_folder += '/'
     else:
         create_directory_structure(project_folder[:-1])
+    project_folder = project_folder.replace('//', '/')
 
     # Store all the parameters in shake of reproducibility
     frame = inspect.currentframe()
@@ -978,7 +979,7 @@ def RanSEPs(genome          , organism         , nt_seqs        , aa_seqs       
         rocax.set_xlabel('False Positive Rate')
         rocax.set_ylabel('True Positive Rate')
         rocax.set_title('ROC, folds = '+str(folds)+', '+organism)
-        rocax.legend(loc="lower right")
+        # rocax.legend(loc="lower right")
         froc.savefig(project_folder+'results/'+organism+'_'+extension+'_ROC_'+str(folds)+'.svg')
 
 
