@@ -82,7 +82,10 @@ def run_ranseps(genome              , cds=False            , outDir='./'        
     # Create main and intermediaries folder
     if not os.path.exists(outDir):
         os.makedirs(outDir)
-    intDir = outDir+'intermediary_files/'
+    if outDir[-1]=='/':
+        intDir = outDir+'intermediary_files/'
+    else:
+        intDir = outDir+'/intermediary_files/'
     if not os.path.exists(intDir):
         os.makedirs(intDir)
 
@@ -130,6 +133,11 @@ def run_ranseps(genome              , cds=False            , outDir='./'        
     noconserved_SEPs_set = [ide for ide in your_aa_seqs.keys() if ide in conservation and conservation[ide]==0 and your_lengths[ide] <= 100 and your_frames[ide][3]=='NO']
     noconserved_BIGs_set = [ide for ide in your_aa_seqs.keys() if ide in conservation and conservation[ide]==0 and your_lengths[ide]  > 100 and your_frames[ide][3]=='NO']
     print 'Sets defined'
+
+    if intDir[-1]=='/':
+        intDir+'rs_results'
+    else:
+        intDir+'/rs_results'
 
     sf.RanSEPs(genome=genome           , organism=species_code, nt_seqs=your_nt_seqs, aa_seqs=your_aa_seqs      , annotation=your_annotation,
                autoset=[seps_percentage, big_prots+sep_prots  , noconserved_SEPs_set, None]                     , set_sizes=[positive_set_size, feature_set_size, negative_set_size, None],
