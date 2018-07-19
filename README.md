@@ -46,7 +46,10 @@ In order to run a prediction you will only a pair of files:
 Then just:
 
 ```bash
-ranseps -g <path/to/your/genome> -c <path/to/your/cds/file>
+# Custom CDS
+ranseps -g <path/to/your/fasta_or_genbank> -c <path/to/your/cds/file>
+# Using the CDS from a genbank
+ranseps -g <path/to/your/genbank>
 ```
 
 This will run a simple search for proteins with size higher than 10 amino acids. However, RanSEPs allows multiple sets of parameters to explore and find the best set for your organism of interest. To check them execute:
