@@ -5,9 +5,9 @@
 # utils.py
 #
 # Author : Miravet-Verde, Samuel
-# Last updated : 11/15/2017
+# Last updated : 07/19/2017
 #
-# 2017 - Centre de Regulacio Genomica (CRG) - All Rights Reserved
+# 2018 - Centre de Regulacio Genomica (CRG) - All Rights Reserved
 #############################################################
 
 import os.path
@@ -154,21 +154,27 @@ def dict2file(dictionary, filename):
 
 def load_multifasta(inFile):
     """ Return a dictionary wit the sequences from a multifasta file """
-    your_sequences = {}
-    handle = open(inFile, 'rU')
-    for record in SeqIO.parse(handle, "fasta"):
-        your_sequences[record.id]=str(record.seq)
-    handle.close()
-    return your_sequences
+    if type(inFile)==dict:
+        return inFile
+    else:
+        your_sequences = {}
+        handle = open(inFile, 'rU')
+        for record in SeqIO.parse(handle, "fasta"):
+            your_sequences[record.id]=str(record.seq)
+        handle.close()
+        return your_sequences
 
 
 def load_multifasta_info(inFile):
     """ Return a dictionary wit the sequences from a multifasta file """
-    your_sequences = {}
-    handle = open(inFile, 'rU')
-    for record in SeqIO.parse(handle, "fasta"):
-        your_sequences[record.id+'//'+record.description]=str(record.seq)
-    handle.close()
+    if inFile.endswith('gb') or inFile.endswith('gbk') or inFile.endswith('genbank'):
+        your_sequences = genbank2sequences(inFile, mode=1)
+    else:
+        your_sequences = {}
+        handle = open(inFile, 'rU')
+        for record in SeqIO.parse(handle, "fasta"):
+            your_sequences[record.id+'//'+record.description]=str(record.seq)
+        handle.close()
     return your_sequences
 
 
@@ -217,27 +223,41 @@ def strand_load_annotation(inFile):
             annotation[ide] = l
     return annotation
 
-
-def gb2annotation(inFile):
-    annotation = {}
-    c = 1
-    for rec in SeqIO.parse(inFile, "genbank"):
-        if rec.features:
-            for feature in rec.features:
-                if feature.type == "CDS":
-                    strand = '-' if feature.location.strand==-1 else '+'
-                    start  = int(feature.location.start)
-                    stop   = int(feature.location.end)
+def genbank2sequences(genome, mode=0):
+    sequences = {}
+    with open(genome, "rU") as input_handle:
+        for record in SeqIO.parse(input_handle, "genbank"):
+            for feat in record.features:
+                if feat.type in ['CDS', 'rRNA', 'tRNA', 'ncRNA']:
+                    strand = '-' if feat.location.strand==-1 else '+'
                     try:
-                        genename = feature.qualifiers["locus_tag"][0]
+                        start  = int(feat.location.start)
+                        stop   = int(feat.location.end)
+                        start, stop = sorted([start, stop])
+                    except:
+                        start  = int(feat.location.nofuzzy_start)
+                        stop   = int(feat.location.nofuzzy_end)
+                        start, stop = sorted([start, stop])
+
+                    try:
+                        name = feat.qualifiers['locus_tag'][0]
                     except:
                         try:
-                            genename = feature.qualifiers["gene"][0]
+                            name = feat.qualifiers["gene"][0]
                         except:
-                            genename = 'unknown'+str(c)
-                            c += 1
-                    annotation[genename] = [start, stop, strand]
-    return annotation
+                            name = feat.qualifiers["protein_id"][0]
+                    seq = record.seq[start:stop]
+                    if strand=='-':
+                        seq = seq.reverse_complement()
+
+                    if mode==1:
+                        try:
+                            name = name+'//'+feat.qualifiers["product"][0]
+                        except:
+                            name = name+'//'+"Unassigned function"
+                    sequences[name]=str(seq)
+    return sequences
+
 
 def lists2dict(listA, listB):
     """ Given two lists of the same length, merge them in one dictionary """
@@ -256,4 +276,4 @@ def reverse_complement(seq):
 
     return ''.join([complement[k] if k in complement else 'N' for k in seq][::-1])
 
-# 2017 - Centre de Regulacio Genomica (CRG) - All Rights Reserved
+# 2018 - Centre de Regulacio Genomica (CRG) - All Rights Reserved

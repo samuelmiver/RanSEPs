@@ -3,14 +3,14 @@
 #############################################################
 #
 # Author : Miravet-Verde, Samuel
-# Written : 06/02/2016
-# Last updated : 11/17/2017
-# 2017 - Centre de Regulacio Genomica (CRG) - All Rights Reserved
+# Written : 11/17/2016
+# Last updated : 07/19/2018
+# 2018 - Centre de Regulacio Genomica (CRG) - All Rights Reserved
 #############################################################
 
 import sys, os
 import re
-import utils as u
+import ranseps_utils as u
 import glob
 from Bio import SeqIO
 from Bio.Seq import Seq
@@ -139,4 +139,4 @@ def run_orfinder(genome, cds, outdir, ct, min_size, species_code):
     print 'number of SEPs after filter:'+str(len(records_nt))+'\n------\n'
     SeqIO.write(records_nt, font, 'fasta')
 
-# 2017 - Centre de Regulacio Genomica (CRG) - All Rights Reserved
+# 2018 - Centre de Regulacio Genomica (CRG) - All Rights Reserved

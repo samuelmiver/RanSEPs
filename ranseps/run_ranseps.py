@@ -5,20 +5,44 @@
 # run_ranseps.py
 #
 # Author : Miravet-Verde, Samuel
-# Last updated : 11/15/2017
+# Last updated : 07/19/2018
 #
-# 2017 - Centre de Regulacio Genomica (CRG) - All Rights Reserved
+# 2018 - Centre de Regulacio Genomica (CRG) - All Rights Reserved
 #############################################################
 
 import sys, os
 import seps_functions as sf
-import utils as u
+import ranseps_utils as u
 
 from orfinder import run_orfinder
 from generate_dbs import run_gdbs
 from blaster import run_blaster
 
-def run_ranseps(genome              , cds                  , outDir='./'         , codon_table=0        , min_size=10, species_code=None,
+
+def format_genome_cds(genome_file, cds_file):
+
+    genome = u.load_genome(genome_file)
+    Ns = genome.count('N')
+    if Ns == len(genome):
+        sys.exit("Genome version incomplete, genome sequence missing or all Ns. Try with an updated version\n")
+
+    if genome and cds_file:
+        cds = u.load_multifasta(cds_file)
+        info = u.load_multifasta_info(cds_file)
+        return genome, cds, info
+    else:
+        if genome_file.endswith('gb') or genome_file.endswith('gbk') or genome_file.endswith('genbank'):
+            if 1:
+                cds = u.genbank2sequences(genome_file)
+                info = u.load_multifasta_info(genome_file)
+                return genome, cds, info
+            else:
+                sys.exit("Incompatible sequence format in genbank file\n")
+        else:
+            sys.exit("No CDS sequences provided. Please, provide a genbank file or a fasta file with CDS")
+
+
+def run_ranseps(genome              , cds=False            , outDir='./'         , codon_table=0        , min_size=10, species_code=None,
                 eval_thr=1e-8       , threads=12           ,
                 eval_thr2=2e-8      , align_thr=0.0        , length_thr=0.0      , iden_thr=50.0        ,
                 seps_percentage=0.25, positive_set_size=100, feature_set_size=100, negative_set_size=150,
@@ -67,12 +91,16 @@ def run_ranseps(genome              , cds                  , outDir='./'        
         species_code = genome.split('/')[-1].split('.')[0][:5]
 
     # Genome size:
-    genome  = u.load_multifasta(genome).values()[0]
+    if genome.endswith('gb') or genome.endswith('gbk') or genome.endswith('genbank'):
+        typ = 'genbank'
+    else:
+        typ = 'fasta'
+    genome, your_annotation, your_info = format_genome_cds(genome, cds)
     gl      = len(genome)
 
     # Generate DBs
-    run_orfinder(genome=genome, cds=cds, outdir=intDir, ct=codon_table, min_size=min_size, species_code=species_code)
-    run_gdbs(cds=cds, outdir=intDir, min_size=min_size, species_code=species_code, genome_length=gl)
+    run_orfinder(genome=genome, cds=your_annotation, outdir=intDir, ct=codon_table, min_size=min_size, species_code=species_code)
+    run_gdbs(information=your_info, outdir=intDir, min_size=min_size, species_code=species_code, genome_length=gl)
 
     # Run Blast and find close species at the same time
     close_species = run_blaster(outdir=intDir, min_size=min_size, species_code=species_code, threshold=eval_thr, threads=threads)
@@ -117,4 +145,4 @@ def run_ranseps(genome              , cds                  , outDir='./'        
     print "Thanks for using RanSEPs :D!\n||Stand and be True||"
     # All things serve the Beam.
 
-# 2017 - Centre de Regulacio Genomica (CRG) - All Rights Reserved
+# 2018 - Centre de Regulacio Genomica (CRG) - All Rights Reserved

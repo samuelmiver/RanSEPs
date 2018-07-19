@@ -5,10 +5,10 @@
 # cmd.py
 #
 # Author : Miravet-Verde, Samuel
-# Last updated : 11/17/2017
+# Last updated : 07/19/2018
 #
 # Command line parser to run RanSEPs.
-# 2017 - Centre de Regulacio Genomica (CRG) - All Rights Reserved
+# 2018 - Centre de Regulacio Genomica (CRG) - All Rights Reserved
 #############################################################
 
 import sys
@@ -39,14 +39,13 @@ parser.add_argument('-g', '--genome',
                     action="store",
                     required=True,
                     type=str,
-                    help="Genome of reference in fasta format.")
+                    help="Genome of reference in fasta or genbank complete format. If genbank format, CDS argument is not mandatory, own annotation will be used.")
 
 parser.add_argument('-c', '--CDS',
                     dest="cds",
                     action="store",
-                    required=True,
                     type=str,
-                    help="Coding DNA sequences of reference genome in fasta format.")
+                    help="Coding DNA sequences of reference genome in fasta format. If genome in genbank format, annotation of CDS will be replaced with the ones included in this file.")
 
 parser.add_argument('-o', '--output_directory',
                     dest="outDir",
@@ -169,5 +168,5 @@ options = parser.parse_args()
 if __name__=="__main__":
     run_all()
 
-# 2017 - Centre de Regulacio Genomica (CRG) - All Rights Reserved
+# 2018 - Centre de Regulacio Genomica (CRG) - All Rights Reserved
 

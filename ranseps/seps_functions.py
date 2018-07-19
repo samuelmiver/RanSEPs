@@ -6,9 +6,9 @@
 #
 # Author : Miravet-Verde, Samuel
 # Written : 03/06/2017
-# Last updated : 11/17/2017
+# Last updated : 07/19/2018
 #
-# 2017 - Centre de Regulacio Genomica (CRG) - All Rights Reserved
+# 2018 - Centre de Regulacio Genomica (CRG) - All Rights Reserved
 #############################################################
 
 #####################
@@ -24,9 +24,9 @@ import pickle
 import inspect
 import os.path
 import itertools
-import utils as u
 import numpy as np
 import pandas as pd
+import ranseps_utils as u
 import matplotlib.pyplot as plt
 
 # To compute specificic features
@@ -1051,4 +1051,4 @@ def handle_outputs(species_code, outDir):
             fo.write('\t'.join(to_write)+'\n')
         fo.close()
 
-# 2017 - Centre de Regulacio Genomica (CRG) - All Rights Reserved
+# 2018 - Centre de Regulacio Genomica (CRG) - All Rights Reserved

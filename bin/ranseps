@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# 2017 - Centre de Regulacio Genomica (CRG) - All Rights Reserved
+# 2018 - Centre de Regulacio Genomica (CRG) - All Rights Reserved
 
 import sys
 sys.path.insert(0, '/ranseps')
@@ -8,4 +8,4 @@ from ranseps.cmd import run_all
 if __name__ == "__main__":
     run_all()
 
-# 2017 - Centre de Regulacio Genomica (CRG) - All Rights Reserved
+# 2018 - Centre de Regulacio Genomica (CRG) - All Rights Reserved

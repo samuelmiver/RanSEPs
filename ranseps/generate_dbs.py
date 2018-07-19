@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
-# 2017 - Centre de Regulacio Genomica (CRG) - All Rights Reserved
+# 2018 - Centre de Regulacio Genomica (CRG) - All Rights Reserved
 
 import glob
 import sys, os
 import os.path
-import utils as u
+import ranseps_utils as u
 from Bio.Seq import Seq
 
 
@@ -13,15 +13,17 @@ def extract_functions(anno_dict):
 
     dic = {}
     for info, seq in anno_dict.iteritems():
-        try:
+        if '[' in info:
             info       = info.split('[')[1:]
             gene, prot = ''.join(info).split(']')[0:2]
             gene       = gene.replace('gene=','')
             protein    = prot.replace('protein=','')
-            dic[gene+' |'+protein] = seq
-        except:
-            gene = info.split(' ')[0].replace('>', '')
-            dic[gene+' |'+gene] = seq
+            dic[gene+' | '+protein] = seq
+        elif '//' in info:
+            gene = info.split('//')[0].replace('>', '')
+            dic[gene+' | '+gene] = seq
+        else:
+            dic[info] = seq
     return dic
 
 
@@ -105,10 +107,9 @@ def annotation_file(g_size, predd, dir_handle, min_size):
     fo2.close()
 
 
-def run_gdbs(cds, outdir, min_size, species_code, genome_length):
+def run_gdbs(information, outdir, min_size, species_code, genome_length):
 
     dir_handle = outdir+species_code
-    annotated = u.load_multifasta_info(cds)
     predicted = u.load_multifasta(dir_handle+'_small_nt.fa')
     predicted_info = u.load_multifasta_info(dir_handle+'_small_nt.fa')
 
@@ -129,10 +130,10 @@ def run_gdbs(cds, outdir, min_size, species_code, genome_length):
 
     # Pair ides
     print 'Pairing annotation\n----\n'
-    pair_id(predicted, annotated, dir_handle+'_pairs.txt')
+    pair_id(predicted, information, dir_handle+'_pairs.txt')
 
     # Write annotation
     print 'generating annotation\n----\n'
     annotation_file(genome_length, predicted_info, dir_handle, min_size)
 
-# 2017 - Centre de Regulacio Genomica (CRG) - All Rights Reserved
+# 2018 - Centre de Regulacio Genomica (CRG) - All Rights Reserved
