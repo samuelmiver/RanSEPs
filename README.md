@@ -94,8 +94,8 @@ This project has been fully developed at [Centre for Genomic Regulation](http://
 
 If you experience any problem at any step involving the program, you can use the 'Issues' page of this repository or contact:
 
-[Miravet-Verde, Samuel](mailto:samuel.miravet@crg.eu)
-[Lluch-Senar, Maria](mailto:maria.lluch@crg.eu)
+[Miravet-Verde, Samuel](mailto:samuel.miravet@crg.eu)       
+[Lluch-Senar, Maria](mailto:maria.lluch@crg.eu)       
 [Serrano, Luis](mailto:luis.serrano@crg.eu)
 
 # License
