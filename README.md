@@ -94,13 +94,13 @@ This project has been fully developed at [Centre for Genomic Regulation](http://
 
 If you experience any problem at any step involving the program, you can use the 'Issues' page of this repository or contact:
 
-[Miravet-Verde, Samuel](samuel.miravet@crg.eu)    
-[Lluch-Senar, Maria](maria.lluch@crg.eu)    
-[Serrano, Luis](luis.serrano@crg.eu)    
+[Miravet-Verde, Samuel](mailto:samuel.miravet@crg.eu)
+[Lluch-Senar, Maria](mailto:maria.lluch@crg.eu)
+[Serrano, Luis](mailto:luis.serrano@crg.eu)
 
 # License
 
 RanSEPs is under a common GNU GENERAL PUBLIC LICENSE. Plese, check [LICENSE](./LICENSE) for further information.
 
-*[2017] - Centre de Regulació Genòmica (CRG) - All Rights Reserved*
+*[2018] - Centre de Regulació Genòmica (CRG) - All Rights Reserved*
 
