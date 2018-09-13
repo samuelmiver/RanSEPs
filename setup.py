@@ -1,4 +1,4 @@
-# 2017 - Centre de Regulacio Genomica (CRG) - All Rights Reserved
+# 2018 - Centre de Regulacio Genomica (CRG) - All Rights Reserved
 
 try:
     from setuptools import setup
@@ -17,10 +17,10 @@ config = {
     'install_requires': ['biopython','numpy','pandas','matplotlib',
                          'scipy','sklearn', 'setuptools'],
     'packages': ['ranseps'],
-    'package_data':{'ranseps': ['dbs/*.fa']},
+    'package_data':{'ranseps': ['dbs/*.fa', 'dbs/*.txt']},
     'scripts': ['bin/ranseps']
 }
 
 setup(**config)
 
-# 2017 - Centre de Regulacio Genomica (CRG) - All Rights Reserved
+# 2018 - Centre de Regulacio Genomica (CRG) - All Rights Reserved

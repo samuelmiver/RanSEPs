@@ -68,9 +68,9 @@ pylab.rcParams.update(params)
 #####################
 
 def filter_dic(dic, exclude):
-    for ide in exclude:
-        dic.pop(ide, None)
-    return dic
+
+    keep = set(dic.keys()).difference(exclude)
+    return {k:dic[k] for k in keep}
 
 def check_nt(seq, length=True):
     alphabet = ['A','C','G','T']
@@ -117,7 +117,7 @@ def load_all_orthologs(subcode, evalth=2e-8, alignth=50.0, lenth=58.0, identh=50
 
     blast_outs = subcode+'_results_processed.out'
 
-    close += ['mferi']
+    close += ['mferi', 'NCBIR']
 
     results = {k:[] for k in targets_fa.keys()}
     with open(blast_outs) as fi:
@@ -127,7 +127,7 @@ def load_all_orthologs(subcode, evalth=2e-8, alignth=50.0, lenth=58.0, identh=50
             query = line[1][:5]
             query_c = line[1]
 
-            if query not in close and target[:5] != query:
+            if query not in close and target[:5] != query and 'NCBIRANSEPS' not in query_c:
                 evl  = float(line[-2])            # eval
                 ale  = int(line[3])-int(line[5])  # alignment length - gap opens
                 idp  = float(line[2])
@@ -659,6 +659,7 @@ def featurizer2(genome, organism, nt_seqs, aa_seqs, annotation, positive_set, fe
     # Label the samples
     # Combine them in a dictionary with the labels 1=positive , 0=negative
     to_append = []
+    fo = open(project_folder+'../'+organism+'_rbs.out', 'w')
     for ide, seq in nt_seqs.iteritems():
         st            = startcodon(seq)
         gc            = GCs[ide]
@@ -676,6 +677,10 @@ def featurizer2(genome, organism, nt_seqs, aa_seqs, annotation, positive_set, fe
         your_hex2     = hex2[ide]
 
         to_append.append([ide, st, gc, your_cai, nnf, ccf, m10, p20, m10p20_stackE, RBS_stackE, RBS01, your_hexn, your_hex0, your_hex1, your_hex2, gold_sets[ide]])
+
+        if RBS01==1:
+            fo.write(ide+'\n')
+    fo.close()
 
     # Create the df
     columns = ['ide',
@@ -979,7 +984,7 @@ def RanSEPs(genome          , organism         , nt_seqs        , aa_seqs       
         rocax.set_xlabel('False Positive Rate')
         rocax.set_ylabel('True Positive Rate')
         rocax.set_title('ROC, folds = '+str(folds)+', '+organism)
-        # rocax.legend(loc="lower right")
+        rocax.legend(loc="lower right")
         froc.savefig(project_folder+'results/'+organism+'_'+extension+'_ROC_'+str(folds)+'.svg')
 
 
@@ -1021,9 +1026,9 @@ def handle_outputs(species_code, outDir):
     os.system(c)
 
     # Generate the last file
-    header = ['identifier', 'start'   , 'stop', 'strand', 'aa_length',
-              'annotation', 'function', 'RanSEPs_score' , 'RanSEPs_stdv',
-              'nt_seq'    , 'aa_seq']
+    header = ['identifier'    , 'start'       , 'stop', 'strand', 'aa_length',
+              'annotation'    , 'function'    , 'homology_type' , 'predicted_function', 'RBS-like',
+              'RanSEPs_score' , 'RanSEPs_stdv', 'nt_seq'        , 'aa_seq']
 
     intDir = outDir+'intermediary_files/'+species_code
 
@@ -1036,20 +1041,45 @@ def handle_outputs(species_code, outDir):
         dbfuncts = u.str_dic_generator(intDir+'_pairs.txt', 0, 2, split_by='\t')
         dbscores = u.str_dic_generator(outDir+'intermediary_files/rs_results/results/'+species_code+'_final_prediction.txt', 0, 1)
         dbstdevs = u.str_dic_generator(outDir+'intermediary_files/rs_results/results/'+species_code+'_final_prediction.txt', 0, 2)
+        dbshtyps = u.str_dic_generator(intDir+'_homology_types.out', 0, 1)
+        dbshfuns = u.str_dic_generator(intDir+'_homology_types.out', 0, 2)
+        dbsrbsps = u.set_generator(intDir+'_rbs.out', 0)
+
+        dbpairesS = set(dbpaires.keys())
+        dbscoresS = set(dbscores.keys())
+        dbshtypsS = set(dbshtyps.keys())
+        dbshfunsS = set(dbshfuns.keys())
 
         ides = sorted(dbaaseqs.keys())
         for ide in ides:
-            if ide in dbpaires:
+
+            if ide in dbpairesS:
                 p = dbpaires[ide].replace(';', ',')
                 f = dbfuncts[ide].replace(';', ',')
             else:
                 p = 'Putative ORF'
                 f = 'Unassigned function'
-            if ide not in dbscores:
+
+            if ide not in dbscoresS:
                 dbscores[ide] = 'Not a valid sequence'
                 dbstdevs[ide] = 'Not a valid sequence'
-            to_write = [ide]+[str(x) for x in dbannots[ide]]+[str(len(dbaaseqs[ide])), p, f, str(dbscores[ide]), str(dbstdevs[ide]), dbntseqs[ide], dbaaseqs[ide]]
-            fo.write('\t'.join(to_write)+'\n')
+
+            if ide in dbshtypsS:
+                h = dbshtyps[ide]
+            else:
+                h = 0
+
+            if ide in dbshfunsS:
+                ff = dbshfuns[ide]
+            else:
+                ff = 0
+
+            rrbbss = 0
+            if ide in dbsrbsps:
+                rrbbss = 1
+
+            to_write = [ide]+[str(x) for x in dbannots[ide]]+[str(len(dbaaseqs[ide])), p, f, h, ff, rrbbss, str(dbscores[ide]), str(dbstdevs[ide]), dbntseqs[ide], dbaaseqs[ide]]
+            fo.write('\t'.join([str(x) for x in to_write])+'\n')
         fo.close()
 
 # 2018 - Centre de Regulacio Genomica (CRG) - All Rights Reserved

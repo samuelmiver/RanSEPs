@@ -28,7 +28,7 @@ def run_all():
                 options.eval_thr       , options.threads          ,
                 options.eval_thr2      , options.align_thr        , options.length_thr      , options.iden_thr         ,
                 options.seps_percentage, options.positive_set_size, options.feature_set_size, options.negative_set_size,
-                options.test_size      , options.folds)
+                options.test_size      , options.folds            , options.other_database  , options.blastp_db)
 
 
 #PARSER
@@ -39,7 +39,7 @@ parser.add_argument('-g', '--genome',
                     action="store",
                     required=True,
                     type=str,
-                    help="Genome of reference in fasta or genbank complete format. If genbank format, CDS argument is not mandatory, own annotation will be used.")
+                    help="Genome of reference in fasta or genbank complete format.\nAutodection: .gb, .gbk, .genbank = genbank; any other file considered as fasta.\nCDS argument is not mandatory, own annotation will be used.")
 
 parser.add_argument('-c', '--CDS',
                     dest="cds",
@@ -66,7 +66,7 @@ parser.add_argument('-s', '--min_size',
                     action="store",
                     default=10,
                     type=int,
-                    help="Minimum protein size considered.")
+                    help="Minimum protein size considered (as number of aminoacids).")
 
 parser.add_argument('-sp', '--species_code',
                     dest="species_code",
@@ -126,7 +126,7 @@ parser.add_argument('-rp', '--seps_percentage',
                     action="store",
                     default=0.25,
                     type=float,
-                    help="Percentage of SEPs included in the positive and feature training sets")
+                    help="Fraction (base 1) of SEPs included in the positive and feature training sets")
 
 parser.add_argument('-pn', '--positive_set_size',
                     dest="positive_set_size",
@@ -154,7 +154,7 @@ parser.add_argument('-tn', '--test_size',
                     action="store",
                     default=0.2,
                     type=float,
-                    help="Percentage of sequences from the training sets used in testing")
+                    help="Percentage (base 1) of sequences from the training sets used in testing")
 
 parser.add_argument('-f', '--folds',
                     dest="folds",
@@ -162,6 +162,20 @@ parser.add_argument('-f', '--folds',
                     default=50,
                     type=int,
                     help="Training positive set size for each iteration")
+
+parser.add_argument('-bp', '--blastp_db',
+                    dest='blastp_db',
+                    action="store",
+                    default=None,
+                    type=str,
+                    help=" Uses the provided file as custom amino acidic database for the BlastP step. This allows custom searches against user-defined datasets. No conserved sequences with this file will be used in the negative training set.")
+
+parser.add_argument('-db', '--database',
+                    dest='other_database',
+                    action="store",
+                    default=None,
+                    type=str,
+                    help="Uses files from a previous prediction recomputing the prediction. Just add here the location of 'intermediary_files' and the ORFs and conservation will be loaded here")
 
 options = parser.parse_args()
 

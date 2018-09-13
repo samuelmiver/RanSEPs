@@ -46,7 +46,7 @@ def run_ranseps(genome              , cds=False            , outDir='./'        
                 eval_thr=1e-8       , threads=12           ,
                 eval_thr2=2e-8      , align_thr=0.0        , length_thr=0.0      , iden_thr=50.0        ,
                 seps_percentage=0.25, positive_set_size=100, feature_set_size=100, negative_set_size=150,
-                test_size=0.2       , folds=50            ):
+                test_size=0.2       , folds=50             , other_database=None , blastp_db=None):
     """
     RanSEPs provides a framework for bacterial genome re-annotation and novel small proteins (SEPs)
     detection adjusting the search to different genomic features that govern protein-coding capabilities.
@@ -92,7 +92,9 @@ def run_ranseps(genome              , cds=False            , outDir='./'        
     # Define code
     if species_code==None:
         species_code = genome.split('/')[-1].split('.')[0][:5]
+    subcode = intDir+species_code
 
+    # Check if other database:
     # Genome size:
     if genome.endswith('gb') or genome.endswith('gbk') or genome.endswith('genbank'):
         typ = 'genbank'
@@ -100,23 +102,31 @@ def run_ranseps(genome              , cds=False            , outDir='./'        
         typ = 'fasta'
     genome, your_annotation, your_info = format_genome_cds(genome, cds)
     gl      = len(genome)
+    if other_database:
+        print 'Using preexistent database found in '+other_database+'\n'
+        cmd = 'cp '+other_database+'*.fa '+intDir
+        os.system(cmd)
+        cmd = 'cp '+other_database+'*.txt '+intDir
+        os.system(cmd)
+        cmd = 'cp '+other_database+'*.out '+intDir
+        os.system(cmd)
+    else:
+        # Write fasta file to do blast with prefix NCBI_
+        with open(intDir+'ncbi_aa.fa', 'w') as fo:
+            for k, v in your_annotation.iteritems():
+                fo.write('>NCBIRANSEPS'+k+'\n'+v+'\n')
+        # Generate DBs
+        run_orfinder(genome=genome, cds=your_annotation, outdir=intDir, ct=codon_table, min_size=min_size, species_code=species_code)
+        run_gdbs(information=your_info, outdir=intDir, min_size=min_size, species_code=species_code, genome_length=gl)
 
-    # Generate DBs
-    run_orfinder(genome=genome, cds=your_annotation, outdir=intDir, ct=codon_table, min_size=min_size, species_code=species_code)
-    run_gdbs(information=your_info, outdir=intDir, min_size=min_size, species_code=species_code, genome_length=gl)
+        # load all required info
+        close_species = run_blaster(outdir=intDir, min_size=min_size, species_code=species_code, threshold=eval_thr, threads=threads, blastp_db=blastp_db)
 
-    # Run Blast and find close species at the same time
-    close_species = run_blaster(outdir=intDir, min_size=min_size, species_code=species_code, threshold=eval_thr, threads=threads)
-
-    #############
-    # Run RanSEPs
-
-    # load all required info
-    subcode        = intDir+species_code
-    conservation   = sf.load_number_times_conserved(subcode, evalth=eval_thr2, alignth=align_thr, lenth=length_thr, identh=iden_thr, close=close_species, size=min_size)
+    conservation   = {k:int(v) for k, v in u.str_dic_generator(subcode+'_homology_types.out', 0, 1, split_by='\t').iteritems()}
+    # conservation   = sf.load_number_times_conserved(subcode, evalth=eval_thr2, alignth=align_thr, lenth=length_thr, identh=iden_thr, close=close_species, size=min_size)
 
     your_nt_seqs, your_aa_seqs, your_NCBI, your_annotation, your_lengths, your_frames, your_contra = sf.organism_info(subcode, gl, min_size)
-    exclude         = [ide for ide in your_annotation if not sf.check_nt(your_nt_seqs[ide]) or not sf.check_aa(your_aa_seqs[ide])]
+    exclude         = set([ide for ide in your_annotation if not sf.check_nt(your_nt_seqs[ide]) or not sf.check_aa(your_aa_seqs[ide])])
     your_nt_seqs    = sf.filter_dic(your_nt_seqs   , exclude)
     your_aa_seqs    = sf.filter_dic(your_aa_seqs   , exclude)
     your_annotation = sf.filter_dic(your_annotation, exclude)
@@ -130,14 +140,17 @@ def run_ranseps(genome              , cds=False            , outDir='./'        
             big_prots.append(ide)
         else:
             sep_prots.append(ide)
-    noconserved_SEPs_set = [ide for ide in your_aa_seqs.keys() if ide in conservation and conservation[ide]==0 and your_lengths[ide] <= 100 and your_frames[ide][3]=='NO']
-    noconserved_BIGs_set = [ide for ide in your_aa_seqs.keys() if ide in conservation and conservation[ide]==0 and your_lengths[ide]  > 100 and your_frames[ide][3]=='NO']
+    noconserved_SEPs_set = [ide for ide in your_aa_seqs.keys() if ide in conservation and conservation[ide] in [0, 3] and your_lengths[ide] <= 100 and your_frames[ide][3]=='NO']
+    noconserved_BIGs_set = [ide for ide in your_aa_seqs.keys() if ide in conservation and conservation[ide] in [0, 3] and your_lengths[ide]  > 100 and your_frames[ide][3]=='NO']
     print 'Sets defined'
 
     if intDir[-1]=='/':
         intDir+'rs_results'
     else:
         intDir+'/rs_results'
+
+    #############
+    # Run RanSEPs
 
     sf.RanSEPs(genome=genome           , organism=species_code, nt_seqs=your_nt_seqs, aa_seqs=your_aa_seqs      , annotation=your_annotation,
                autoset=[seps_percentage, big_prots+sep_prots  , noconserved_SEPs_set, None]                     , set_sizes=[positive_set_size, feature_set_size, negative_set_size, None],
