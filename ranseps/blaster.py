@@ -151,7 +151,7 @@ def run_blaster(outdir, min_size, species_code, threshold, threads, blastp_db):
     print len(NCBI_ides)
 
     # Define close
-    thr = 0.85*len(NCBI_ides)
+    thr = 0.75*len(NCBI_ides)
     close = set({k:v for k, v in Counter(close).iteritems() if v>=thr}.keys())
 
     # Define homology types used in priorizitation
