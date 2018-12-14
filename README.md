@@ -88,6 +88,17 @@ All the additional arguments present in the desktop version are available in the
 help(run_ranseps)
 ```
 
+# Versions
+
+- *v_1*: added predictor of pseudogenes based in homology
+- *v_2*:
+  - pseudorandomized mode
+  - fixed set sizes options
+  - average probability per prediction optimized
+  - autonegative set
+
+
+
 # Contact
 
 This project has been fully developed at [Centre for Genomic Regulation](http://www.crg.eu/) at the group of [Design of Biological Systems](http://www.crg.eu/en/luis_serrano).
