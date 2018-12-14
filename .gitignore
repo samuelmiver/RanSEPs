@@ -102,4 +102,4 @@ ENV/
 .mypy_cache/
 
 # Custom files
-doclean.sh
+compile_version.py
