@@ -11,7 +11,7 @@ RanSEPs provides a framework for bacterial genome re-annotation and novel small 
 
 <center><img src="./figures/RanSEPs_functioning.png"></center>
 
-Original publication with full description of methods can be found [here](XXXXX).
+Original publication with full description of methods can be found [here](https://www.embopress.org/doi/10.15252/msb.20188290).
 
 # Preparation
 
