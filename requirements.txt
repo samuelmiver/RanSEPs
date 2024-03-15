@@ -1,5 +1,5 @@
 biopython==1.70
-numpy==1.13.1
+numpy==1.22.0
 pandas==0.23.4
 matplotlib==2.2.3
 scipy==1.0.0
